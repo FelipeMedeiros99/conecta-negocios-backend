@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Estado {
+  id     Int      @id @default(autoincrement())
+  nome   String   @db.VarChar(50)
+  uf     String   @db.VarChar(2) @unique 
+  
+  cidades Cidade[] 
+  @@map("estado")
+}
+
+
+model Cidade {
+  id        Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(100)
+  
+  estadoId  Int
+  estado    Estado   @relation(fields: [estadoId], references: [id]) 
+
+  usuarios  Usuario[]
+  anuncios  Anuncio[]
+
+  @@map("cidade")
+}
+
+
+model Usuario {
+  id        Int            @id @default(autoincrement())
+  nome      String         @db.VarChar(100)
+  
+  cep                String   @db.VarChar(8)
+  logradouro         String   @db.VarChar(100)
+  numero             String   @db.VarChar(10)  
+  complemento        String?  @db.VarChar(100) 
+  bairro             String   @db.VarChar(100)
+
+  cidadeId           Int
+  cidade             Cidade   @relation(fields: [cidadeId], references: [id]) 
+
+  anuncios           Anuncio[]
+
+  @@map("usuario")
+}
+
+
+model Categoria {
+  id       Int     @id @default(autoincrement())
+  nome     String  @db.VarChar(100) @unique 
+  
+  anuncios Anuncio[]
+
+  @@map("categoria")
+}
+
+model Anuncio {
+  id          Int      @id @default(autoincrement())
+  titulo      String   @db.VarChar(150)
+  descricao   String   @db.Text 
+  preco       Decimal  @db.Decimal(10, 2) 
+
+  tipo        TipoAnuncio
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+  cidadeId    Int
+  cidade      Cidade   @relation(fields: [cidadeId], references: [id])
+  
+  usuarioId   Int
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+
+  
+  categoriaId Int
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+
+  @@map("anuncio")
+}
+
+enum TipoAnuncio{
+  PRODUTO
+  SERVICO
+}
