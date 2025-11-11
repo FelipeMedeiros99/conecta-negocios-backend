@@ -34,8 +34,10 @@ model Cidade {
 
 
 model Usuario {
-  id        Int            @id @default(autoincrement())
-  nome      String         @db.VarChar(100)
+  id                 Int            @id @default(autoincrement())
+  nome               String         @db.VarChar(100)
+  username           String         @db.VarChar(30) @unique
+  senha              String         @db.VarChar(255)
   
   cep                String   @db.VarChar(8)
   logradouro         String   @db.VarChar(100)
