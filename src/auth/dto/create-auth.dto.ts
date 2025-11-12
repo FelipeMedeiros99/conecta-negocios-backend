@@ -1,5 +1,4 @@
 import {
-  IsInt,
   IsNotEmpty,
   IsNumberString,
   IsOptional,
@@ -21,8 +20,8 @@ export class CreateAuthDto {
   @IsString()
   @MinLength(3, { message: 'O nome de usuário deve ter no mínimo 3 caracteres.' })
   @MaxLength(30, { message: 'O nome de usuário não pode exceder 30 caracteres.' })
-  @Matches(/^[a-z0-9_.-]+$/, {
-    message: 'O nome de usuário deve conter apenas letras minúsculas, números e os caracteres _, ., -',
+  @Matches(/^[a-zA-Z0-9_.-]+$/, {
+    message: 'O nome de usuário deve conter apenas letras, números e os caracteres _, ., -',
   })
   username: string;
 
@@ -57,7 +56,13 @@ export class CreateAuthDto {
   @MaxLength(100)
   bairro: string;
 
-  @IsNotEmpty({ message: 'O ID da cidade é obrigatório.' })
-  @IsInt({ message: 'O ID da cidade deve ser um número inteiro.' })
-  cidadeId: number;
+  @IsNotEmpty({ message: 'A cidade é obrigatória.' })
+  @IsString()
+  @MaxLength(100)
+  cidade: string;
+
+  @IsNotEmpty({ message: 'O estado é obrigatório.' })
+  @IsString()
+  @MaxLength(100)
+  estado: string;
 }
