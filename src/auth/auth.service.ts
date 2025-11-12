@@ -3,7 +3,6 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as bcrypt from "bcrypt"
 import { PrismaService } from '../prisma/prisma.service';
-import { UsuarioService } from '../usuario/usuario.service';
 import { PrismaClientKnownRequestError } from '../../generated/internal/prismaNamespace';
 import { Usuario } from '../../generated/browser';
 import { JwtService } from '@nestjs/jwt';
