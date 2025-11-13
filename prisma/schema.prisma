@@ -32,6 +32,7 @@ model Usuario {
 model Categoria {
   id       Int     @id @default(autoincrement())
   nome     String  @db.VarChar(100) @unique 
+  tipo     TipoAnuncio
   
   anuncios Anuncio[]
 
@@ -43,8 +44,6 @@ model Anuncio {
   titulo      String   @db.VarChar(150)
   descricao   String   @db.Text 
   preco       Decimal  @db.Decimal(10, 2) 
-
-  tipo        TipoAnuncio
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
