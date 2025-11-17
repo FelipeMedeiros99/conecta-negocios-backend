@@ -42,7 +42,7 @@ model Categoria {
 model Anuncio {
   id          Int      @id @default(autoincrement())
   titulo      String   @db.VarChar(150)
-  descricao   String   @db.Text 
+  descricao   String   @db.VarChar(2000)
   preco       Decimal  @db.Decimal(10, 2) 
   
   createdAt   DateTime @default(now())
@@ -54,10 +54,23 @@ model Anuncio {
   categoriaId Int
   categoria   Categoria @relation(fields: [categoriaId], references: [id])
 
+  imagens     Imagens[]
+
   @@map("anuncio")
 }
 
 enum TipoAnuncio{
   PRODUTO
   SERVICO
+}
+
+model Imagens{
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  url             String @db.Text
+
+  anuncioId       Int
+  anuncio         Anuncio  @relation(fields: [anuncioId], references: [id])
+
+  @@map("imagens")
 }
