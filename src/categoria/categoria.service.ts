@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -93,8 +93,13 @@ export class CategoriaService {
     return 'This action adds a new categoria';
   }
 
-  findAll() {
-    return `This action returns all categoria`;
+  async findAll() {
+    try{
+      return await this.prisma.categoria.findMany();
+    }catch(e){
+      this.logger.error("Erro enquanto tentava buscar categorias")
+      throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 
   findOne(id: number) {
