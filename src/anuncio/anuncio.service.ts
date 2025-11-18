@@ -2,7 +2,8 @@ import { HttpCode, HttpException, HttpStatus, Injectable, InternalServerErrorExc
 import { CreateAnuncioDto } from './dto/create-anuncio.dto';
 import { UpdateAnuncioDto } from './dto/update-anuncio.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { PrismaClientKnownRequestError } from '../../generated/internal/prismaNamespace';
+import { AnuncioFindManyArgs, AnuncioWhereInput, PrismaClientKnownRequestError } from '../../generated/internal/prismaNamespace';
+import { FindAllQueryDto } from './dto/find-all-query.dto';
 
 @Injectable()
 export class AnuncioService {
@@ -55,9 +56,48 @@ export class AnuncioService {
     }
   }
 
-  async findAll() {
+  async findAll(query: FindAllQueryDto) {
+    const where: AnuncioWhereInput = {}
+
+    if(query?.q){
+      where.OR = [
+        {
+          titulo: {
+            contains: query.q,
+            mode: "insensitive"
+          }
+        },
+        {
+          descricao: {
+            contains: query.q,
+            mode: "insensitive"
+          }
+        }
+      ]
+    }
+    if(query?.cidade || query?.estado){
+      where.usuario = {};
+      if(query.cidade){
+        where.usuario = {
+          cidade: {
+            equals: query?.cidade,
+            mode: "insensitive"
+          }
+        }
+      }
+      if(query.estado){
+        where.usuario = {
+          estado: {
+            equals: query?.estado,
+            mode: "insensitive"
+          }
+        }
+      }
+    }
+
     try{
       const anuncios = await this.prisma.anuncio.findMany({
+        where,
         include: {
           imagens: {
             select: {
@@ -112,11 +152,11 @@ export class AnuncioService {
     }
   }
 
-  update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
-    return `This action updates a #${id} anuncio`;
-  }
+  // update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
+  //   return `This action updates a #${id} anuncio`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} anuncio`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} anuncio`;
+  // }
 }

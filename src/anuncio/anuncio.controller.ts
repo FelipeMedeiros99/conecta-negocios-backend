@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles, Query } from '@nestjs/common';
 import { AnuncioService } from './anuncio.service';
 import { CreateAnuncioDto } from './dto/create-anuncio.dto';
 import { UpdateAnuncioDto } from './dto/update-anuncio.dto';
 import { Usuario } from '../../generated/client';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FindAllQueryDto } from './dto/find-all-query.dto';
 
 @Controller('anuncio')
 export class AnuncioController {
@@ -23,22 +24,22 @@ export class AnuncioController {
   }
   
   @Get()
-  findAll() {
-    return this.anuncioService.findAll();
+  findAll(@Query() query: FindAllQueryDto) {
+    return this.anuncioService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.anuncioService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.anuncioService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto) {
-    return this.anuncioService.update(+id, updateAnuncioDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto) {
+  //   return this.anuncioService.update(+id, updateAnuncioDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.anuncioService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.anuncioService.remove(+id);
+  // }
 }
