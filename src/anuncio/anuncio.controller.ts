@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { AnuncioService } from './anuncio.service';
 import { CreateAnuncioDto } from './dto/create-anuncio.dto';
 import { UpdateAnuncioDto } from './dto/update-anuncio.dto';
 import { Usuario } from '../../generated/client';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('anuncio')
 export class AnuncioController {
@@ -14,6 +15,13 @@ export class AnuncioController {
     return this.anuncioService.create(createAnuncioDto, user?.id!);
   }
 
+  @UseInterceptors(FilesInterceptor('imagens', 5))
+  @Post(":postId")
+  createImagens(@Param("postId") postId: number, @UploadedFiles() imagens: Array<Express.Multer.File>, @Request() req: any) {
+    const user: Usuario = req.user;
+    return this.anuncioService.createImagens(+postId, +user?.id!, imagens);
+  }
+  
   @Get()
   findAll() {
     return this.anuncioService.findAll();
