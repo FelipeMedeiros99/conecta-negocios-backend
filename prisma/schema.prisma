@@ -14,6 +14,7 @@ model Usuario {
   nome               String         @db.VarChar(100)
   username           String         @db.VarChar(30) @unique
   senha              String         @db.VarChar(255)
+  telefone           String         @db.VarChar(11)
   
   cep                String   @db.VarChar(8)
   logradouro         String   @db.VarChar(100)
@@ -21,7 +22,7 @@ model Usuario {
   complemento        String?  @db.VarChar(100) 
   bairro             String   @db.VarChar(100)
   cidade             String   @db.VarChar(100)
-  estado            String    @db.VarChar(100)
+  estado             String    @db.VarChar(100)
 
   anuncios           Anuncio[]
 
