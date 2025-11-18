@@ -57,7 +57,30 @@ export class AnuncioService {
 
   async findAll() {
     try{
-      return await this.prisma.anuncio.findMany()
+      const anuncios = await this.prisma.anuncio.findMany({
+        include: {
+          imagens: {
+            select: {
+              id: true,
+              url: true
+            }
+          },
+          usuario: {
+            select: {
+              nome: true,
+              cidade: true,
+              estado: true
+            }
+          },
+          categoria: {
+            select:{
+              nome: true, 
+            }
+          }
+        }
+      })
+
+      return anuncios
       
     }catch(e){
       if(e instanceof HttpException) throw e;
@@ -67,8 +90,26 @@ export class AnuncioService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} anuncio`;
+  async findOne(id: number) {
+    try{
+      const anuncios = await this.prisma.anuncio.findFirst({
+        where: {id},
+        include: {
+          imagens: true,
+          usuario: true,
+          categoria: true
+        }
+      })
+      console.log(anuncios)
+
+      return anuncios
+      
+    }catch(e){
+      if(e instanceof HttpException) throw e;
+
+      this.logger.error("erro ao tentar criar imagnes: ", e)
+      throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 
   update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
