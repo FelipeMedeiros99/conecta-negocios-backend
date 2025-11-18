@@ -15,12 +15,13 @@ export class AuthService {
   ) { }
 
   async cadastrar(createAuthDto: CreateAuthDto) {
-    const { senha, username, nome, bairro, cep, cidade, estado, logradouro, numero, complemento } = createAuthDto
+    const { senha, username, nome, bairro, cep, cidade, estado, logradouro, numero, complemento, telefone } = createAuthDto
     try {
       const hashPassword = await bcrypt.hash(senha, 10);
       const user = await this.prisma.usuario.create({
         data: {
           username,
+          telefone,
           senha: hashPassword,
           nome: nome.toUpperCase(),
           bairro: bairro.toUpperCase(),

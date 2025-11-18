@@ -16,6 +16,13 @@ export class CreateAuthDto {
   @MaxLength(100)
   nome: string;
 
+  @IsNotEmpty({ message: 'O telefone é obrigatório.' })
+  @IsString()
+  @Matches(/^[1-9]{2}9[0-9]{8}$/, {
+    message: 'O telefone deve ter o formato DDD + 9 + número (ex: 98999999999), apenas números.',
+  })
+  telefone: string
+
   @IsNotEmpty({ message: 'O nome de usuário é obrigatório.' })
   @IsString()
   @MinLength(3, { message: 'O nome de usuário deve ter no mínimo 3 caracteres.' })
