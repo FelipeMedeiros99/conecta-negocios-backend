@@ -1,0 +1,44 @@
+services:
+  postgres: 
+    image: postgres
+    container_name: conecta-negocios-db
+    restart: always
+
+    env_file:
+      - .env
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    
+    ports:
+      - "5430:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    networks:
+      - conecta-negocios-nw
+    
+  conecta-negocios-backend:
+    build: .
+    image: conecta-negocios-backend
+    container_name: conecta-negocios-backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5002:5000"
+    depends_on:
+      - postgres
+    networks:
+      - conecta-negocios-nw
+    command: sh -c "npx prisma migrate deploy && npx prisma generate && npm run start:prod"
+
+volumes: 
+  postgres_data:
+
+networks: 
+  conecta-negocios-nw:
+  
