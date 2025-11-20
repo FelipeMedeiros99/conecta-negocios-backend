@@ -176,11 +176,12 @@ export class AnuncioService {
     }
   }
 
-  async update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
+  async update(id: number, updateAnuncioDto: UpdateAnuncioDto, usuarioId: number) {
     try{
       return await this.prisma.anuncio.update({
         where: {
-          id
+          id,
+          usuarioId
         },
         data: updateAnuncioDto
       }) 
@@ -192,7 +193,17 @@ export class AnuncioService {
     }
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} anuncio`;
-  // }
+  async remove(id: number, usuarioId: number) {
+    try{
+      await this.prisma.anuncio.delete({
+        where: {id, usuarioId}
+      })
+
+      return this.findAnuncioUsuario(usuarioId);
+    }catch(e){
+      if(e instanceof HttpException) throw e;
+      this.logger.error("erro ao tentar deletar anuncio: ", e)
+      throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
 }

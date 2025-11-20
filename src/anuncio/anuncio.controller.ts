@@ -40,12 +40,14 @@ export class AnuncioController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto) {
-    return this.anuncioService.update(+id, updateAnuncioDto);
+  update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto, @Request() req: any) {
+    const user: Usuario = req.user;
+    return this.anuncioService.update(+id, updateAnuncioDto, user.id);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.anuncioService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string, @Request() req: any) {
+    const user: Usuario = req.user;
+    return this.anuncioService.remove(+id, user.id);
+  }
 }
