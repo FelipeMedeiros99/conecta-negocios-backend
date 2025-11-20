@@ -130,17 +130,20 @@ export class AnuncioService {
     }
   }
 
-  async findOne(id: number) {
+  async findAnuncioUsuario(userId: number){
     try{
-      const anuncios = await this.prisma.anuncio.findFirst({
-        where: {id},
+      const anuncios = await this.prisma.anuncio.findMany({
+        where: {
+          usuarioId: userId
+        },
         include: {
-          imagens: true,
-          usuario: true,
-          categoria: true
+          imagens: {
+            select: {
+              url: true
+            }
+          }
         }
       })
-      console.log(anuncios)
 
       return anuncios
       
@@ -152,9 +155,42 @@ export class AnuncioService {
     }
   }
 
-  // update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
-  //   return `This action updates a #${id} anuncio`;
-  // }
+  async findOne(id: number) {
+    try{
+      const anuncios = await this.prisma.anuncio.findFirst({
+        where: {id},
+        include: {
+          imagens: true,
+          usuario: true,
+          categoria: true
+        }
+      })
+
+      return anuncios
+      
+    }catch(e){
+      if(e instanceof HttpException) throw e;
+
+      this.logger.error("erro ao tentar buscar anuncio: ", e)
+      throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async update(id: number, updateAnuncioDto: UpdateAnuncioDto) {
+    try{
+      return await this.prisma.anuncio.update({
+        where: {
+          id
+        },
+        data: updateAnuncioDto
+      }) 
+
+    }catch(e){
+      if(e instanceof HttpException) throw e;
+      this.logger.error("erro ao tentar atualizar anuncio: ", e)
+      throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} anuncio`;

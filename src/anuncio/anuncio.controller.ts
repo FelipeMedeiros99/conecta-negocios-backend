@@ -28,15 +28,21 @@ export class AnuncioController {
     return this.anuncioService.findAll(query);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.anuncioService.findOne(+id);
-  // }
+  @Get("meus-anuncios")
+  findAnunciosUsuario(@Request() req: any) {
+    const user: Usuario = req.user;
+    return this.anuncioService.findAnuncioUsuario(+user.id);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto) {
-  //   return this.anuncioService.update(+id, updateAnuncioDto);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.anuncioService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAnuncioDto: UpdateAnuncioDto) {
+    return this.anuncioService.update(+id, updateAnuncioDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
