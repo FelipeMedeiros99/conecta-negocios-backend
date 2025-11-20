@@ -95,7 +95,11 @@ export class CategoriaService {
 
   async findAll() {
     try{
-      return await this.prisma.categoria.findMany();
+      return await this.prisma.categoria.findMany({ 
+        orderBy: {
+          nome: "asc"
+        }
+      });
     }catch(e){
       this.logger.error("Erro enquanto tentava buscar categorias")
       throw new HttpException("Erro no servidor", HttpStatus.INTERNAL_SERVER_ERROR)

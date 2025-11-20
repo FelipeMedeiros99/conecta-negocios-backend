@@ -59,6 +59,9 @@ export class AnuncioService {
   async findAll(query: FindAllQueryDto) {
     const where: AnuncioWhereInput = {}
 
+    if(query?.catId){
+      where.categoriaId = +query.catId
+    }
     if(query?.q){
       where.OR = [
         {
